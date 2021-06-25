@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UMan.Views.LoadArticlePage" Title="Загрузить статью">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Есть статья .xml ? Так загрузите ее"/>
+            <Button Text="Выбрать файл" Command="{Binding AddArticleCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:UMan.ViewModels"
+             Shell.BackgroundColor="#222f31"
+             BackgroundColor="{StaticResource ContentBackground}"
+             x:Class="UMan.Views.Chapter" Title="{Binding Title}">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#222f3e</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    
+    <ContentPage.Content>
+
+        <StackLayout Orientation="Vertical">
+
+            <Label FontSize="Body" Text="{Binding Source={x:Reference Name=FontSizeSlider}, Path=Value,StringFormat='Размер шрифта:{0}'}" HorizontalOptions="FillAndExpand" TextColor="{StaticResource AppTextColor}"></Label>
+
+            <Slider x:Name="FontSizeSlider" Margin="10" Style="{StaticResource FontSizeSlider}"/>
+
+
+            <ScrollView Orientation="Vertical">
+
+                <Label Text="{Binding Content}" Style="{StaticResource ArticleLabel}" FontSize="{Binding Source={x:Reference Name=FontSizeSlider},Path=Value}"></Label>
+
+            </ScrollView>
+
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>
