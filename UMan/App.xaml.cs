@@ -13,7 +13,7 @@ namespace UMan
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
+            
             MainPage = new AppShell();
         }
 

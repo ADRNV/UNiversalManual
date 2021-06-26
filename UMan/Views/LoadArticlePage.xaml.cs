@@ -19,11 +19,11 @@ namespace UMan.Views
       
         public LoadArticlePage()
         {
-            LoadArticlePageVM = new LoadArticlePageVM();
+           
             
             InitializeComponent();
 
-            BindingContext = LoadArticlePageVM;
+            BindingContext = new LoadArticlePageVM();
 
 
         }

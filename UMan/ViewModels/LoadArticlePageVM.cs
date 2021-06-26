@@ -4,8 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using UMan.Models;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -18,19 +16,24 @@ namespace UMan.ViewModels
     public class LoadArticlePageVM : BaseViewModel
     {
             public Command AddArticleCommand;
-
-            private JsonSerializer jsonSerializer; 
-
+            /// <summary>
+            /// Список статей
+            /// </summary>
             private List<Article> _articles;
-
+            /// <summary>
+            /// Список страниц для каждой из статей
+            /// </summary>
             private List<Chapter> _chapters;
-
+            /// <summary>
+            /// Считанный JSON
+            /// </summary>
             private string readyjson;    
-
+            /// <summary>
+            /// Путь к фалу, как не странно
+            /// </summary>
             private string path;
-            private void AddArticle()
-            {
-            async Task PickAndShow()
+           
+            async Task PickAndLoad()
             {
                 try
                 {
@@ -62,7 +65,7 @@ namespace UMan.ViewModels
                 }
 
 
-            }
+                }
                 catch (Exception)
                 {
                     
@@ -71,16 +74,17 @@ namespace UMan.ViewModels
 
             }
 
-            }
+            
+
 
             public LoadArticlePageVM()
             {
                 Title = "Загрузить статью (скоро будет)";
                 
-                AddArticleCommand = new Command(() =>  AddArticle());
+                AddArticleCommand = new Command(() =>  PickAndLoad());
 
-                 App.Current.MainPage.DisplayAlert("Это в разработке", "Скоро добавим", "Ладно");
-        }
+                 App.Current.MainPage.DisplayAlert("Это в разработке", "Скоро добавлю", "Ладно");
+            }
         }
     }
 

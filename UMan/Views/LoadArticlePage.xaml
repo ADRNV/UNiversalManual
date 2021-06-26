@@ -4,7 +4,8 @@
              x:Class="UMan.Views.LoadArticlePage" Title="Загрузить статью">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Есть статья .xml ? Так загрузите ее"/>
+            <Label Text="Есть статья .JSON ? Так загрузите ее"/>
+            <!--Не привязывается к VM-->
             <Button Text="Выбрать файл" Command="{Binding AddArticleCommand}"/>
         </StackLayout>
     </ContentPage.Content>

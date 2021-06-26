@@ -15,8 +15,6 @@ namespace UMan.ViewModels
 
         private Article article = new Article() {Id = default, Content = default,Title = default };
 
-     
-
         public Article Article
         {
             get => article;

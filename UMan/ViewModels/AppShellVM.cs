@@ -17,37 +17,47 @@ using Newtonsoft.Json.Serialization;
 namespace UMan.ViewModels
 {
 
-    public class AppShellVM
+    public class AppShellVM : BaseVM
     {
-        private XmlSerializer Serializer;
-
-
-        private JsonSerializer JsonSerializer;
-
-        private string path = $"{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SampleArticle.xml")}";
+        //Путь.Определяется FilePickerom
+        private string path;
         //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"SampleArticle.xml");
-
         //$@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/Articles.SampleArticle.xml";
 
-        private List<Article> _articles = new List<Article>() { new Article { Content = "Нормально", Title = "Нормально" } };
-
+        /// <summary>
+        /// Статьи
+        /// </summary>
+        private List<Article> _articles = new List<Article>();
+        /// <summary>
+        /// Список страниц для статей
+        /// </summary>
         private List<Chapter> _chapters = new List<Chapter>();
-
-        private string readyjson;
+        //Считанный JSON
+        private string readyJson;
 
         private AppShell appShell;
+
+        public string ReadyJson
+        {
+            get => readyJson;
+            private set => readyJson = value;
+        }
         public AppShellVM(AppShell appshell)
         {
-            JsonSerializer = new JsonSerializer();
+            _articles = new List<Article>();
 
+           
             appShell = appshell;
 
-            PickAndShow();
+            PickAndLoad();
 
 
         }
-
-        private async Task PickAndShow()
+        /// <summary>
+        /// Открывает FilePicker и загружает в приложение статьи
+        /// </summary>
+        /// <returns><code>void</code></returns>
+        private async Task PickAndLoad()
         {
             try
             {
@@ -55,34 +65,34 @@ namespace UMan.ViewModels
 
                 path = file.FullPath;
 
-
-
                 using (Stream stream = new FileStream(path, FileMode.Open))
                 {
                     using (StreamReader sw = new StreamReader(stream))
                     {
-                        readyjson = JsonConvert.SerializeObject(_articles);
+                        readyJson = JsonConvert.SerializeObject(_articles);
 
                         _articles = JsonConvert.DeserializeObject<List<Article>>(sw.ReadToEnd());
+
+                      
 
                     }
                 }
 
 
-            foreach (Article i in _articles)
-            {
-                _chapters.Add(new Chapter(i));
-            }
-            foreach (Chapter i in _chapters)
-            {
-                appShell.Items.Add(i);
-            }
+                foreach (Article i in _articles)
+                {
+                    _chapters.Add(new Chapter(i));
+                }
+                foreach (Chapter i in _chapters)
+                {
+                    appShell.Items.Add(i);
+                }
 
 
             }
             catch (Exception)
             {
-                await appShell.DisplayAlert("Проблемы","Что-то пошло не так","Ок");
+                await appShell.DisplayAlert("Проблемы","Что-то пошло не так, возможно был выбран не .json \n или же JSON с не правильной структурой","Ок");
             }
         }
 

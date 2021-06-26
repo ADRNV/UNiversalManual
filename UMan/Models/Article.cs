@@ -1,20 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 namespace UMan.Models
 {
-   
+   /// <summary>
+   /// Модель статьи
+   /// </summary>
     public class Article : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        
 
-        private int id;
+        #region Поля
+        private int id;//Пока бесполезно
 
         private string title;
 
         private string content;
+        #endregion
+
+        /// <summary>
+        /// Пока бесполезно
+        /// </summary>
         public int Id
         {
             get => id;
@@ -25,7 +31,9 @@ namespace UMan.Models
                 OnPropertyChanged(nameof(Id));
             }
         }
-
+        /// <summary>
+        /// Заголовок статьи
+        /// </summary>
         public string Title
         {
             get => title;
@@ -37,7 +45,9 @@ namespace UMan.Models
             }
         }
 
-
+        /// <summary>
+        /// Содержание статьи
+        /// </summary>
         public string Content 
         { 
             get => content; 
@@ -49,9 +59,13 @@ namespace UMan.Models
             }
                 
         }
+        #region Реализация INtotifyPropertyChanged 
+
+        public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName = " ")
         {
            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
 }

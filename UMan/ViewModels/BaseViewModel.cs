@@ -10,7 +10,7 @@ namespace UMan.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        public IDataStore<Article> DataStore => DependencyService.Get<IDataStore<Article>>();
 
         bool isBusy = false;
         public bool IsBusy

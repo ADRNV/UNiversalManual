@@ -10,7 +10,7 @@ namespace UMan.ViewModels
         public AboutViewModel()
         {
             Title = "О приложении";
-            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://google.com"));
+            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://github.com/Lamer0"));
         }
 
         public ICommand OpenWebCommand { get; }
