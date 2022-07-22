@@ -1,4 +1,7 @@
-﻿using UMan.Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using UMan.Views;
 using Xamarin.Forms;
 
 namespace UMan.ViewModels

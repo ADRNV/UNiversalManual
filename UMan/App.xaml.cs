@@ -1,4 +1,8 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using UMan.Services;
+using UMan.Views;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace UMan
 {
@@ -9,7 +13,7 @@ namespace UMan
         {
             InitializeComponent();
 
-
+            
             MainPage = new AppShell();
         }
 

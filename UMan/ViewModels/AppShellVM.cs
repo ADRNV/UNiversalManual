@@ -1,11 +1,16 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text;
 using UMan.Models;
 using UMan.Views;
+using System.Xml.Serialization;
+using System.IO;
 using Xamarin.Essentials;
+using Xamarin.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 
 namespace UMan.ViewModels
@@ -40,7 +45,7 @@ namespace UMan.ViewModels
         {
             _articles = new List<Article>();
 
-
+           
             appShell = appshell;
 
             PickAndLoad();
@@ -67,7 +72,7 @@ namespace UMan.ViewModels
 
                         _articles = JsonConvert.DeserializeObject<List<Article>>(sw.ReadToEnd());
 
-
+                      
 
                     }
                 }
@@ -86,7 +91,7 @@ namespace UMan.ViewModels
             }
             catch (Exception)
             {
-                await appShell.DisplayAlert("Проблемы", "Что-то пошло не так, возможно был выбран не .json \n или же JSON с не правильной структурой", "Ок");
+                await appShell.DisplayAlert("Проблемы","Что-то пошло не так, возможно был выбран не .json \n или же JSON с не правильной структурой","Ок");
             }
         }
 
