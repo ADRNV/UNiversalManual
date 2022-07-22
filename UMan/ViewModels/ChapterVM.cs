@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using UMan.Models;
-using UMan.Services;
-using UMan.Views;
-using Xamarin.Forms;
 
 namespace UMan.ViewModels
 {
@@ -13,7 +7,7 @@ namespace UMan.ViewModels
     {
         private ObservableCollection<Article> articles;
 
-        private Article article = new Article() {Id = default, Content = default,Title = default };
+        private Article article = new Article() { Id = default, Content = default, Title = default };
 
         public Article Article
         {
@@ -62,7 +56,7 @@ namespace UMan.ViewModels
 
         }
 
-        
+
 
 
         public ObservableCollection<Article> Articles
@@ -78,15 +72,15 @@ namespace UMan.ViewModels
 
         public ChapterVM()
         {
-            
+
             Title = Title;
-         
+
             //Articles = new ObservableCollection<Article>();
             //LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
             //ItemTapped = new Command<Item>(OnItemSelected);
 
-  
+
         }
 
 
