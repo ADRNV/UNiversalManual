@@ -1,14 +1,13 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace UMan.Models
 {
-   /// <summary>
-   /// Модель статьи
-   /// </summary>
+    /// <summary>
+    /// Модель статьи
+    /// </summary>
     public class Article : INotifyPropertyChanged
     {
-        
+
 
         #region Поля
         private int id;//Пока бесполезно
@@ -48,23 +47,23 @@ namespace UMan.Models
         /// <summary>
         /// Содержание статьи
         /// </summary>
-        public string Content 
-        { 
-            get => content; 
-            
+        public string Content
+        {
+            get => content;
+
             set
             {
                 content = value;
                 OnPropertyChanged(nameof(Content));
             }
-                
+
         }
         #region Реализация INtotifyPropertyChanged 
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName = " ")
         {
-           PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

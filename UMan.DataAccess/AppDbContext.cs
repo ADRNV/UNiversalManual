@@ -4,7 +4,7 @@ using UMan.DataAccess.EntitiesConfiguration;
 
 namespace UMan.DataAccess
 {
-    public class AppDbContext : DbContext 
+    public class AppDbContext : DbContext
     {
         public DbSet<Paper>? Papers { get; set; }
 
@@ -20,7 +20,7 @@ namespace UMan.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ArticleConfiguration());
-            
+
             modelBuilder.ApplyConfiguration(new AuthorConfiguration());
 
             modelBuilder.ApplyConfiguration(new PaperConfiguration());

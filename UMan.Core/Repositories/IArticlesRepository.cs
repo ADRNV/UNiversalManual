@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UMan.Core.Repositories
+﻿namespace UMan.Core.Repositories
 {
     public interface IRepository<T>
     {
@@ -16,6 +10,6 @@ namespace UMan.Core.Repositories
 
         Task<int> Update(int id, T article);
 
-        Task<int> Delete(int id);                       
+        Task<int> Delete(int id);
     }
 }
