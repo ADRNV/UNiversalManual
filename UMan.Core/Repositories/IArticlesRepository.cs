@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UMan.Core.Repositories
 {
-    public interface IArticlesRepository<T>
+    public interface IRepository<T>
     {
         Task<T[]> Get();
 
