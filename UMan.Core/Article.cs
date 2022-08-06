@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace UMan.Core.Model
+namespace UMan.Core
 {
     
     public class Article
