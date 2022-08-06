@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMan.Android", "UMan.Androi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UMan", "UMan\UMan.csproj", "{4D5E9CD3-891B-447F-869D-213C0473DB1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMan.Core", "UMan.Core\UMan.Core.csproj", "{3C1D32AA-0449-48A2-ADFF-6BE8683BB5CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UMan.Core", "UMan.Core\UMan.Core.csproj", "{3C1D32AA-0449-48A2-ADFF-6BE8683BB5CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMan.API", "UMan.API\UMan.API.csproj", "{0A41A8CD-B7BC-46CE-8740-F7F7740E6A3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UMan.API", "UMan.API\UMan.API.csproj", "{0A41A8CD-B7BC-46CE-8740-F7F7740E6A3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMan.DataAccess", "UMan.DataAccess\UMan.DataAccess.csproj", "{86F4338F-2A73-4C95-87E4-9ED5BE26B82F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{0A41A8CD-B7BC-46CE-8740-F7F7740E6A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A41A8CD-B7BC-46CE-8740-F7F7740E6A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A41A8CD-B7BC-46CE-8740-F7F7740E6A3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86F4338F-2A73-4C95-87E4-9ED5BE26B82F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86F4338F-2A73-4C95-87E4-9ED5BE26B82F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86F4338F-2A73-4C95-87E4-9ED5BE26B82F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86F4338F-2A73-4C95-87E4-9ED5BE26B82F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
