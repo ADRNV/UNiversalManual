@@ -6,15 +6,20 @@ namespace UMan.DataAccess
 {
     public class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions options) : base(options)
+        {
+           
+        }
+
         public DbSet<Paper>? Papers { get; set; }
 
         public DbSet<Article>? Articles { get; set; }
 
-        public DbSet<Author>? Author { get; set; }
+        public DbSet<Author>? Authors { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer();
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
