@@ -1,45 +1,42 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Threading.Tasks;
 using UMan.Models;
+using UMan.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using UMan.Views;
 
 namespace UMan.ViewModels
 {
     public class LoadArticlePageVM : BaseViewModel
     {
-            public Command AddArticleCommand;
-            /// <summary>
-            /// Список статей
-            /// </summary>
-            private List<Article> _articles;
-            /// <summary>
-            /// Список страниц для каждой из статей
-            /// </summary>
-            private List<Chapter> _chapters;
-            /// <summary>
-            /// Считанный JSON
-            /// </summary>
-            private string readyjson;    
-            /// <summary>
-            /// Путь к фалу, как не странно
-            /// </summary>
-            private string path;
-           
-            async Task PickAndLoad()
-            {
-                try
-                {
-                    var file = await FilePicker.PickAsync();
+        public Command AddArticleCommand;
+        /// <summary>
+        /// Список статей
+        /// </summary>
+        private List<Article> _articles;
+        /// <summary>
+        /// Список страниц для каждой из статей
+        /// </summary>
+        private List<Chapter> _chapters;
+        /// <summary>
+        /// Считанный JSON
+        /// </summary>
+        private string readyjson;
+        /// <summary>
+        /// Путь к фалу, как не странно
+        /// </summary>
+        private string path;
 
-                    path = file.FullPath;
+        async Task PickAndLoad()
+        {
+            try
+            {
+                var file = await FilePicker.PickAsync();
+
+                path = file.FullPath;
 
 
 
@@ -65,26 +62,26 @@ namespace UMan.ViewModels
                 }
 
 
-                }
-                catch (Exception)
-                {
-                    
-                }
-
-
             }
-
-            
-
-
-            public LoadArticlePageVM()
+            catch (Exception)
             {
-                Title = "Загрузить статью (скоро будет)";
-                
-                AddArticleCommand = new Command(() =>  PickAndLoad());
 
-                 App.Current.MainPage.DisplayAlert("Это в разработке", "Скоро добавлю", "Ладно");
             }
+
+
+        }
+
+
+
+
+        public LoadArticlePageVM()
+        {
+            Title = "Загрузить статью (скоро будет)";
+
+            AddArticleCommand = new Command(() => PickAndLoad());
+
+            App.Current.MainPage.DisplayAlert("Это в разработке", "Скоро добавлю", "Ладно");
         }
     }
+}
 
