@@ -1,19 +1,18 @@
 ﻿using AutoFixture;
 using AutoMapper;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using UMan.DataAccess.Repositories;
-using Xunit;
-using UMan.DataAccess.Repositories.Exceptions;
-using Moq;
 using UMan.Core.Repositories;
+using UMan.DataAccess.Repositories;
+using UMan.DataAccess.Repositories.Exceptions;
+using Xunit;
 
 namespace UMan.DataAccess.Tests.Repositories
 {
-    
+
     public class AuthorsRepositoryTests : IClassFixture<StandartFixture>
     {
         private readonly AuthorsRepository _authorsRepository;
@@ -39,7 +38,7 @@ namespace UMan.DataAccess.Tests.Repositories
 
             Core.Author factAuthor = fixture.Create();
 
-            factAuthor.Papers = new List<Core.Paper>() { new Core.Paper()};
+            factAuthor.Papers = new List<Core.Paper>() { new Core.Paper() };
 
             int authorId = await _authorsRepository.Add(factAuthor);
 
@@ -68,7 +67,7 @@ namespace UMan.DataAccess.Tests.Repositories
 
             Task<Core.Author> get = _authorsRepository.Get(id);
 
-            await Assert.ThrowsAnyAsync<EntityNotFoundException<int>>(() => get);   
+            await Assert.ThrowsAnyAsync<EntityNotFoundException<int>>(() => get);
         }
 
         [Fact]
@@ -82,7 +81,7 @@ namespace UMan.DataAccess.Tests.Repositories
             IEnumerable<Core.Author> factAuthors = fixture.CreateMany(3)
                 .ToArray();
 
-            foreach(var author in factAuthors)
+            foreach (var author in factAuthors)
             {
                 await _authorsRepository.Add(author);
             }
