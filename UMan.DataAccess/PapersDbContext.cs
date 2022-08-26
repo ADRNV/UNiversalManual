@@ -4,9 +4,9 @@ using UMan.DataAccess.EntitiesConfiguration;
 
 namespace UMan.DataAccess
 {
-    public class AppDbContext : DbContext
+    public class PapersDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions options) : base(options)
+        public PapersDbContext(DbContextOptions options) : base(options)
         {
            
         }

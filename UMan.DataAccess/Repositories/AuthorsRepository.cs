@@ -13,11 +13,11 @@ namespace UMan.DataAccess.Repositories
 {
     public class AuthorsRepository : IRepository<Core.Author>
     {
-        private readonly AppDbContext _context;
+        private readonly PapersDbContext _context;
 
         private readonly IMapper _mapper;
 
-        public AuthorsRepository(AppDbContext context, IMapper mapper)
+        public AuthorsRepository(PapersDbContext context, IMapper mapper)
         {
             _context = context;
 

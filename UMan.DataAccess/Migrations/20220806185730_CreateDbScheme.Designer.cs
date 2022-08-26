@@ -11,7 +11,7 @@ using UMan.DataAccess;
 
 namespace UMan.DataAccess.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(PapersDbContext))]
     [Migration("20220806185730_CreateDbScheme")]
     partial class CreateDbScheme
     {

@@ -15,11 +15,11 @@ namespace UMan.DataAccess.Tests
             const string connectionString =
             @"Server=localhost;Database=UManDb;Integrated Security=true;";
 
-            DbContextOptions<AppDbContext> options = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptions<PapersDbContext> options = new DbContextOptionsBuilder<PapersDbContext>()
                 .UseSqlServer(connectionString)
                 .Options;
 
-            this.Context = new AppDbContext(options);
+            this.Context = new PapersDbContext(options);
             this.Context.Database.EnsureDeleted();
             this.Context.Database.EnsureCreated();
 
@@ -32,7 +32,7 @@ namespace UMan.DataAccess.Tests
             this.Mapper = new Mapper(configuration);
         }
 
-        public AppDbContext Context { get; }
+        public PapersDbContext Context { get; }
 
         public IMapper Mapper { get; }
         public void Dispose()
