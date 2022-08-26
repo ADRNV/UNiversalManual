@@ -8,7 +8,7 @@ namespace UMan.DataAccess
     {
         public PapersDbContext(DbContextOptions options) : base(options)
         {
-           
+
         }
 
         public DbSet<Paper>? Papers { get; set; }
