@@ -18,6 +18,8 @@ namespace UMan.DataAccess.Repositories
 
             _mapper = mapper;
         }
+
+
         public async Task<int> Add(Author entity, CancellationToken cancellationToken = default)
         {
             Entities.Author author = _mapper.Map<Core.Author, Entities.Author>(entity);

@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
@@ -33,7 +31,7 @@ namespace UMan.DataAccess.Tests.Repositories
             Core.Paper factPaper = fixture.Create();
 
             int factPaperId = await _papersRepository.Add(factPaper);
-            
+
             //act
             Core.Paper expectedPaper = await _papersRepository.Get(factPaperId);
 
@@ -54,7 +52,7 @@ namespace UMan.DataAccess.Tests.Repositories
 
             IEnumerable<Core.Paper> factPapers = fixture.CreateMany(3);
 
-            foreach(Core.Paper paper in factPapers)
+            foreach (Core.Paper paper in factPapers)
             {
                 await _papersRepository.Add(paper);
             }
@@ -96,7 +94,7 @@ namespace UMan.DataAccess.Tests.Repositories
             Core.Paper factPaper = fixture.Create();
 
             int paperId = await _papersRepository.Add(factPaper);
-            
+
             //act
             bool isDeleted = await _papersRepository.Delete(paperId);
 

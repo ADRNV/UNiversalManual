@@ -1,11 +1,8 @@
 ﻿using AutoFixture;
-using AutoMapper;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using UMan.Core.Repositories;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 using Xunit;
