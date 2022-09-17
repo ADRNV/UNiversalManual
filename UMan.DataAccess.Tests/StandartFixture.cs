@@ -23,6 +23,7 @@ namespace UMan.DataAccess.Tests
             {
                 c.AddProfile<AuthorMapperProfile>();
                 c.AddProfile<PaperMapperProfile>();
+                c.AddProfile<ArticleMapperProfile>();
             });
 
             this.Mapper = new Mapper(configuration);
