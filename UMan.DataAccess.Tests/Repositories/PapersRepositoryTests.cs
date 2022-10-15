@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UMan.Core;
+using UMan.Core.Pagination;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 using Xunit;
@@ -163,6 +165,36 @@ namespace UMan.DataAccess.Tests.Repositories
             Task<int> update = _papersRepository.Update(id, updatedPaper);
 
             await Assert.ThrowsAnyAsync<EntityNotFoundException<int>>(() => update);
+        }
+
+        [Theory]
+        [InlineData(1, 3)]
+        [InlineData(2, 3)]
+        public async void GetPapers_ShouldReturnsPapersPage(int pageNumber, int pageSize)
+        {
+            //arrange
+
+            var queryParameters = new QueryParameters() { PageNumber = pageNumber, PageSize = pageSize};
+
+            var articleFixture = new Fixture().Build<Core.Article>();
+
+            var paperFixture = new Fixture().Build<Core.Paper>()
+                .With(p => p.Id, 1)
+                .With(p => p.Articles, articleFixture.CreateMany(3).ToList())
+                .Without(p => p.Author);
+
+            IEnumerable<Core.Paper> factPapers = paperFixture.CreateMany(10);
+
+            foreach(var paper in factPapers)
+            {
+                await _papersRepository.Add(paper);
+            }
+
+            //act
+            Page<Paper> papersPage = await _papersRepository.Get(queryParameters);
+            
+            //assert
+            Assert.Equal(papersPage.Count, queryParameters.PageSize);
         }
     }
 }

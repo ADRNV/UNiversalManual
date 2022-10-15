@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UMan.Core;
+using UMan.Core.Pagination;
+using UMan.Core.Pagination.Paged;
 using UMan.Core.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 
 namespace UMan.DataAccess.Repositories
 {
-    public class AuthorsRepository : IRepository<Core.Author>
+    public class AuthorsRepository : IRepository<Core.Author>, IPagingSource<Core.Author>
     {
         private readonly PapersDbContext _context;
 
@@ -75,6 +77,19 @@ namespace UMan.DataAccess.Repositories
             {
                 return _mapper.Map<Entities.Author, Core.Author>(author);
             }
+        }
+
+        public async Task<Page<Author>> Get(QueryParameters queryParameters, CancellationToken cancellationToken = default)
+        {
+            IEnumerable<Entities.Author> authors = await _context.Authors.AsNoTracking()
+               .Include(a => a.Papers)
+               .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+               .Take(queryParameters.PageSize)
+               .ToListAsync();
+
+            var authorsPage = new AuthorsPage(_mapper.Map<IEnumerable<Core.Author>>(authors), _context.Papers.Count());
+
+            return authorsPage;
         }
 
         public async Task<int> Update(int id, Author entity, CancellationToken cancellationToken = default)

@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UMan.Core.Pagination;
+using UMan.DataAccess.Entities;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 using Xunit;
@@ -154,6 +156,32 @@ namespace UMan.DataAccess.Tests.Repositories
                 //act
                 await _authorsRepository.Update(id, factAuthor);
             });
+        }
+
+        [Theory]
+        [InlineData(1, 3)]
+        [InlineData(2, 3)]
+        public async void GetAuthors_ShouldReturnsAuthorsPage(int pageNumber, int pageSize)
+        {
+            //arrange
+
+            var queryParameters = new QueryParameters() { PageNumber = pageNumber, PageSize = pageSize };
+
+            var factAuthors = new Fixture().Build<Core.Author>()
+                .Without(a => a.Papers)
+                .CreateMany(10);
+            
+           
+            foreach (var author in factAuthors)
+            {
+                await _authorsRepository.Add(author);
+            }
+
+            //act
+            Page<Core.Author> authorsPage = await _authorsRepository.Get(queryParameters);
+
+            //assert
+            Assert.Equal(authorsPage.Count, queryParameters.PageSize);
         }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UMan.Core;
+using UMan.Core.Pagination;
+using UMan.Core.Pagination.Paged;
 using UMan.Core.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 
 namespace UMan.DataAccess.Repositories
 {
-    public class PapersRepository : IRepository<Core.Paper>
+    public class PapersRepository : IRepository<Core.Paper>, IPagingSource<Core.Paper>
     {
         private readonly PapersDbContext _context;
 
@@ -98,6 +100,19 @@ namespace UMan.DataAccess.Repositories
             {
                 throw new EntityNotFoundException<int>(id);
             }
+        }
+
+        public async Task<Page<Paper>> Get(QueryParameters queryParameters, CancellationToken cancellationToken = default)
+        {
+            IEnumerable<Entities.Paper> paper = await _context.Papers.AsNoTracking()
+                .Include(p => p.Articles)
+                .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+                .Take(queryParameters.PageSize)
+                .ToListAsync();
+
+            var papersPage = new PapersPage(_mapper.Map<IEnumerable<Core.Paper>>(paper), _context.Papers.Count());
+
+            return papersPage;
         }
     }
 }
