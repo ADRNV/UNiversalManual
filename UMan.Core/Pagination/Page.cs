@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UMan.Core.Pagination
+﻿namespace UMan.Core.Pagination
 {
-    public abstract class Page<T> 
+    public abstract class Page<T>
     {
         private readonly IEnumerable<T> _items;
         public Page(IEnumerable<T> items, int totalCount, string? error = null)

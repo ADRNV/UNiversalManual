@@ -23,7 +23,7 @@ namespace UMan.Domain.Papers
             }
         }
 
-        
+
 
     }
 }

@@ -174,7 +174,7 @@ namespace UMan.DataAccess.Tests.Repositories
         {
             //arrange
 
-            var queryParameters = new QueryParameters() { PageNumber = pageNumber, PageSize = pageSize};
+            var queryParameters = new QueryParameters() { PageNumber = pageNumber, PageSize = pageSize };
 
             var articleFixture = new Fixture().Build<Core.Article>();
 
@@ -185,14 +185,14 @@ namespace UMan.DataAccess.Tests.Repositories
 
             IEnumerable<Core.Paper> factPapers = paperFixture.CreateMany(10);
 
-            foreach(var paper in factPapers)
+            foreach (var paper in factPapers)
             {
                 await _papersRepository.Add(paper);
             }
 
             //act
             Page<Paper> papersPage = await _papersRepository.Get(queryParameters);
-            
+
             //assert
             Assert.Equal(papersPage.Count, queryParameters.PageSize);
         }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UMan.Core.Pagination
+﻿namespace UMan.Core.Pagination
 {
     public class QueryParameters
     {
@@ -20,11 +14,11 @@ namespace UMan.Core.Pagination
 
             set
             {
-                if(value <= 0)
+                if (value <= 0)
                 {
                     _pageSize = 1;
                 }
-                else if(value > MaxItemsPerPage)
+                else if (value > MaxItemsPerPage)
                 {
                     _pageSize = MaxItemsPerPage;
                 }

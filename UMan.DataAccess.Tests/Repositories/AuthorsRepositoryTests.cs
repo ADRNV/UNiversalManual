@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UMan.Core.Pagination;
-using UMan.DataAccess.Entities;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 using Xunit;
@@ -170,8 +169,8 @@ namespace UMan.DataAccess.Tests.Repositories
             var factAuthors = new Fixture().Build<Core.Author>()
                 .Without(a => a.Papers)
                 .CreateMany(10);
-            
-           
+
+
             foreach (var author in factAuthors)
             {
                 await _authorsRepository.Add(author);

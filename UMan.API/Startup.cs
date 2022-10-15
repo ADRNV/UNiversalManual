@@ -1,11 +1,8 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using UMan.Core.Repositories;
 using UMan.DataAccess;
 using UMan.DataAccess.Repositories;
-using UMan.Domain.Papers;
 
 namespace UMan.API
 {
@@ -36,7 +33,7 @@ namespace UMan.API
             services.AddMvc();
         }
 
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
