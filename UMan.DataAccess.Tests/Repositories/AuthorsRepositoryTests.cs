@@ -1,26 +1,20 @@
 ﻿using AutoFixture;
-using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using UMan.Core.Pagination;
+using UMan.DataAccess.Entities;
 using UMan.DataAccess.Repositories;
-using Xunit;
 using UMan.DataAccess.Repositories.Exceptions;
-using Moq;
-using UMan.Core.Repositories;
+using Xunit;
 
 namespace UMan.DataAccess.Tests.Repositories
 {
-    
+
     public class AuthorsRepositoryTests : IClassFixture<StandartFixture>
     {
         private readonly AuthorsRepository _authorsRepository;
-
-        private readonly Mock<IRepository<Core.Author>> _authorsRepositoryMock;
-
-        private readonly IMapper _mapper;
 
         public AuthorsRepositoryTests()
         {
@@ -39,7 +33,7 @@ namespace UMan.DataAccess.Tests.Repositories
 
             Core.Author factAuthor = fixture.Create();
 
-            factAuthor.Papers = new List<Core.Paper>() { new Core.Paper()};
+            factAuthor.Papers = new List<Core.Paper>() { new Core.Paper() };
 
             int authorId = await _authorsRepository.Add(factAuthor);
 
@@ -68,7 +62,7 @@ namespace UMan.DataAccess.Tests.Repositories
 
             Task<Core.Author> get = _authorsRepository.Get(id);
 
-            await Assert.ThrowsAnyAsync<EntityNotFoundException<int>>(() => get);   
+            await Assert.ThrowsAnyAsync<EntityNotFoundException<int>>(() => get);
         }
 
         [Fact]
@@ -82,7 +76,7 @@ namespace UMan.DataAccess.Tests.Repositories
             IEnumerable<Core.Author> factAuthors = fixture.CreateMany(3)
                 .ToArray();
 
-            foreach(var author in factAuthors)
+            foreach (var author in factAuthors)
             {
                 await _authorsRepository.Add(author);
             }
@@ -162,6 +156,32 @@ namespace UMan.DataAccess.Tests.Repositories
                 //act
                 await _authorsRepository.Update(id, factAuthor);
             });
+        }
+
+        [Theory]
+        [InlineData(1, 3)]
+        [InlineData(2, 3)]
+        public async void GetAuthors_ShouldReturnsAuthorsPage(int pageNumber, int pageSize)
+        {
+            //arrange
+
+            var queryParameters = new QueryParameters() { PageNumber = pageNumber, PageSize = pageSize };
+
+            var factAuthors = new Fixture().Build<Core.Author>()
+                .Without(a => a.Papers)
+                .CreateMany(10);
+            
+           
+            foreach (var author in factAuthors)
+            {
+                await _authorsRepository.Add(author);
+            }
+
+            //act
+            Page<Core.Author> authorsPage = await _authorsRepository.Get(queryParameters);
+
+            //assert
+            Assert.Equal(authorsPage.Count, queryParameters.PageSize);
         }
     }
 }
