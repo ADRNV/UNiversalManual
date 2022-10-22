@@ -30,7 +30,7 @@ namespace UMan.API
             var page = await _mediator.Send(new Get.CommandByQueryParameters(queryParameters));
 
             HttpContext.Response.Headers.Add("Paging-Headers", JsonConvert.SerializeObject(page));
-              
+
             return page.Items.ToArray();
         }
 
@@ -57,7 +57,7 @@ namespace UMan.API
         /// <param name="updatePaper">New paper</param>
         /// <returns>Id of updated <see cref="Paper"/></returns>
         [HttpPut("papers/{id}/edit")]
-        public async Task<int> Update([FromQuery] int oldPaper, [FromQuery] Paper updatePaper) => 
+        public async Task<int> Update([FromQuery] int oldPaper, [FromQuery] Paper updatePaper) =>
             await _mediator.Send(new Update.Command(updatePaper, oldPaper));
 
         /// <summary>

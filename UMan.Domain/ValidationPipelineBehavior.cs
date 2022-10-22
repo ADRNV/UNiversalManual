@@ -3,7 +3,7 @@ using MediatR;
 
 namespace UMan.Domain
 {
-    public class ValidationPipelineBehavior<TRequest, TResponse>: IPipelineBehavior<TRequest, TResponse>
+    public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
         private readonly List<IValidator<TRequest>> _validators;

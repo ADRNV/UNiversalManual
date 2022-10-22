@@ -14,6 +14,6 @@ namespace UMan.Core.Repositories
 
         Task<bool> Delete(int id, CancellationToken cancellationToken = default);
 
-       Task<Page<T>> Get(QueryParameters queryParameters, CancellationToken cancellationToken = default);
+        Task<Page<T>> Get(QueryParameters queryParameters, CancellationToken cancellationToken = default);
     }
 }

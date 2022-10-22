@@ -29,7 +29,7 @@ namespace UMan.API
                 c.AddProfile<PaperMapperProfile>();
                 c.AddProfile<AuthorMapperProfile>();
                 c.AddProfile<ArticleMapperProfile>();
-            },Assembly.GetExecutingAssembly());
+            }, Assembly.GetExecutingAssembly());
 
             services.AddMediatR(Assembly.GetAssembly(typeof(Domain.Papers.Create)));
 
