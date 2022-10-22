@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using UMan.Core.Repositories;
 using UMan.DataAccess;
@@ -19,7 +21,14 @@ namespace UMan.API
         {
             services.AddControllers();
 
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(c =>
+            {
+                c.AddProfile<PaperMapperProfile>();
+                c.AddProfile<AuthorMapperProfile>();
+                c.AddProfile<ArticleMapperProfile>();
+            },Assembly.GetExecutingAssembly());
+
+            services.AddMediatR(Assembly.GetAssembly(typeof(Domain.Papers.Create)));
 
             services.AddDbContext<PapersDbContext>(o =>
             {
@@ -31,6 +40,16 @@ namespace UMan.API
             services.AddRouting();
 
             services.AddMvc();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Papers API", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
 
@@ -41,9 +60,14 @@ namespace UMan.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Papers API");
+            });
+
             app.UseRouting();
 
-
+            app.UseSwagger();
 
             app.UseEndpoints(endpoints =>
             {
