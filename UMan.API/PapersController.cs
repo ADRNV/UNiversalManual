@@ -25,7 +25,7 @@ namespace UMan.API
         /// <param name="queryParameters">Parameters for pagination</param>
         /// <returns>Page of parameters</returns>
         [HttpGet("papers/{queryParameters}")]
-        public async Task<Paper[]> Papers([FromQuery] QueryParameters queryParameters)
+        public async Task<Paper[]> Get([FromQuery] QueryParameters queryParameters)
         {
             var page = await _mediator.Send(new Get.CommandByQueryParameters(queryParameters));
 
@@ -40,6 +40,32 @@ namespace UMan.API
         /// <param name="id">id of Paper</param>
         /// <returns>Page of parameters</returns>
         [HttpGet("papers/{id}")]
-        public async Task<Paper> Papers([FromQuery] int id) => await _mediator.Send(new Get.CommandById(id));
+        public async Task<Paper> Get([FromQuery] int id) => await _mediator.Send(new Get.CommandById(id));
+
+        /// <summary>
+        /// Creates new <see cref="Paper"/>
+        /// </summary>
+        /// <param name="newPaper">New <see cref="Paper"/></param>
+        /// <returns>Id of new <see cref="Paper"/></returns>
+        [HttpPost("papers/create/{new}")]
+        public async Task<int> Create([FromQuery] Paper newPaper) => await _mediator.Send(new Create.Command(newPaper));
+
+        /// <summary>
+        /// Updates exist <see cref="Paper"/>
+        /// </summary>
+        /// <param name="oldPaper">Existing paper</param>
+        /// <param name="updatePaper">New paper</param>
+        /// <returns>Id of updated <see cref="Paper"/></returns>
+        [HttpPut("papers/{id}/edit")]
+        public async Task<int> Update([FromQuery] int oldPaper, [FromQuery] Paper updatePaper) => 
+            await _mediator.Send(new Update.Command(updatePaper, oldPaper));
+
+        /// <summary>
+        /// Delete exist <see cref="Paper"/>
+        /// </summary>
+        /// <param name="id">Id of exists <see cref="Paper"/></param>
+        /// <returns><see langword="true"/> - if deleted, else - <see langword="false"/></returns>
+        [HttpDelete("papers/{id}/delete")]
+        public async Task<bool> Delete([FromQuery] int id) => await _mediator.Send(new Delete.Command(id));
     }
 }

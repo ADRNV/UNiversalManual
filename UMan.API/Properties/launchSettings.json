@@ -11,6 +11,7 @@
     "UMan.API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
+      "launchUrl": "swagger",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7086;http://localhost:5086",
       "environmentVariables": {
