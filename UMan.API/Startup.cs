@@ -1,13 +1,16 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using UMan.Core.Repositories;
 using UMan.DataAccess;
 using UMan.DataAccess.Repositories;
+using UMan.Domain;
 
 namespace UMan.API
 {
+#pragma warning disable CS1591 
     public class Startup
     {
         private readonly IConfiguration _config;
@@ -29,6 +32,10 @@ namespace UMan.API
             },Assembly.GetExecutingAssembly());
 
             services.AddMediatR(Assembly.GetAssembly(typeof(Domain.Papers.Create)));
+
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
             services.AddDbContext<PapersDbContext>(o =>
             {
