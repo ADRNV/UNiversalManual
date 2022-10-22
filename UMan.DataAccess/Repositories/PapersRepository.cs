@@ -8,7 +8,7 @@ using UMan.DataAccess.Repositories.Exceptions;
 
 namespace UMan.DataAccess.Repositories
 {
-    public class PapersRepository : IRepository<Core.Paper>, IPagingSource<Core.Paper>
+    public class PapersRepository : IRepository<Core.Paper>
     {
         private readonly PapersDbContext _context;
 

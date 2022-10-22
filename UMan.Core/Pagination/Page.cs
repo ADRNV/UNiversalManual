@@ -2,10 +2,10 @@
 {
     public abstract class Page<T>
     {
-        private readonly IEnumerable<T> _items;
+        public IEnumerable<T> Items { get; private set; }
         public Page(IEnumerable<T> items, int totalCount, string? error = null)
         {
-            _items = items;
+            Items = items;
 
             TotalCount = totalCount;
 
@@ -18,7 +18,7 @@
 
         public int Count
         {
-            get => _items.Count();
+            get => Items.Count();
         }
     }
 }
