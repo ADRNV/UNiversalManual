@@ -31,9 +31,9 @@ namespace UMan.API
                 c.AddProfile<ArticleMapperProfile>();
             }, Assembly.GetExecutingAssembly());
 
-            services.AddMediatR(Assembly.GetAssembly(typeof(Domain.Papers.Create)));
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
-            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
