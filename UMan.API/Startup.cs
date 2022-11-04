@@ -44,6 +44,8 @@ namespace UMan.API
 
             services.AddScoped<IRepository<Core.Paper>, PapersRepository>();
 
+            services.AddScoped<IRepository<Core.Author>, AuthorsRepository>();
+
             services.AddRouting();
 
             services.AddMvc();
