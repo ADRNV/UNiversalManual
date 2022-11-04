@@ -8,7 +8,9 @@ namespace UMan.Domain.Papers.Validation
         public PaperValidation()
         {
             RuleFor(p => p.Id).Must(id => id > 0);
-            RuleFor(p => p.Author).NotNull();
+            RuleFor(p => p.Author)
+                .NotNull()
+                .SetValidator(new AuthorValidation());
             RuleFor(p => p.Created).NotNull();
         }
     }

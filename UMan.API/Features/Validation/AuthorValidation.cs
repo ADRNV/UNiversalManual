@@ -7,7 +7,7 @@ namespace UMan.Domain.Papers.Validation
     {
         public AuthorValidation()
         {
-            RuleFor(a => a.Email).NotNull().NotEmpty();
+            RuleFor(a => a.Email).EmailAddress();
             RuleFor(a => a.Name).NotNull().NotEmpty();
         }
     }
