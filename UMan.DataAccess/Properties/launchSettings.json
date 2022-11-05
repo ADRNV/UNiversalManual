@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "UMan.DataAccess": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:50946;http://localhost:50948"
+    }
+  }
+}

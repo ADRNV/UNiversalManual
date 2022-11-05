@@ -6,7 +6,11 @@ using System.Reflection;
 using UMan.Core.Repositories;
 using UMan.DataAccess;
 using UMan.DataAccess.Repositories;
+using UMan.DataAccess.Security;
 using UMan.Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UMan.API
 {
@@ -22,6 +26,24 @@ namespace UMan.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApiUsersContext>(o =>
+            {
+                o.UseSqlServer(_config.GetConnectionString("ApiUserDbConnection"));
+            });
+
+            services.AddDefaultIdentity<IdentityUser>(options => {
+
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+
+            }).AddEntityFrameworkStores<ApiUsersContext>();
+
+            services.AddAuthorization(options =>
+                    options.AddPolicy("Admin", policy =>
+                    policy.RequireAuthenticatedUser()
+                    .RequireClaim("IsAdmin", bool.TrueString)));
+
             services.AddControllers();
 
             services.AddAutoMapper(c =>
@@ -47,6 +69,10 @@ namespace UMan.API
             services.AddScoped<IRepository<Core.Author>, AuthorsRepository>();
 
             services.AddRouting();
+
+            services.AddAuthentication();
+
+            services.AddAuthorization();
 
             services.AddMvc();
 
@@ -74,9 +100,14 @@ namespace UMan.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Papers API");
             });
 
+            
+
             app.UseRouting();
 
             app.UseSwagger();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
