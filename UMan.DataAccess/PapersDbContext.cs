@@ -8,6 +8,11 @@ namespace UMan.DataAccess
     {
         public PapersDbContext(DbContextOptions options) : base(options)
         {
+            
+        }
+
+        public PapersDbContext()
+        {
 
         }
 
@@ -16,6 +21,8 @@ namespace UMan.DataAccess
         public DbSet<Article>? Articles { get; set; }
 
         public DbSet<Author>? Authors { get; set; }
+
+        public DbSet<HashTag>? HashTags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

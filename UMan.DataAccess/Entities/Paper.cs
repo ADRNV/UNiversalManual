@@ -9,5 +9,7 @@
         public DateTime Created { get; set; }
 
         public Author? Author { get; set; }
+
+        public List<HashTag> HashTags { get; set; } = new List<HashTag>();
     }
 }

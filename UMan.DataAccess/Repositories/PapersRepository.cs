@@ -8,7 +8,7 @@ using UMan.DataAccess.Repositories.Exceptions;
 
 namespace UMan.DataAccess.Repositories
 {
-    public class PapersRepository : IRepository<Core.Paper>
+    public class PapersRepository : IRepository<Core.Paper>, IPapersRepository
     {
         private readonly PapersDbContext _context;
 
@@ -113,6 +113,27 @@ namespace UMan.DataAccess.Repositories
             var papersPage = new PapersPage(_mapper.Map<IEnumerable<Core.Paper>>(paper), _context.Papers.Count());
 
             return papersPage;
+        }
+
+        public async Task<IEnumerable<Paper>> GetByTag(IEnumerable<HashTag> hashTags)
+        {
+            var hashTagsEntities = _mapper.Map<IEnumerable<Entities.HashTag>>(hashTags);
+
+            return await Task.Run(() =>
+            {
+                return FindByHashTags(hashTagsEntities);
+            });
+        }
+
+        private IEnumerable<Paper> FindByHashTags(IEnumerable<Entities.HashTag> hashTags)
+        {
+            var query = _context.HashTags
+                .Include(h => h.Paper)
+                .ToList()
+                .UnionBy(hashTags, h => h.Title)
+                .Select(h => h.Paper);
+            
+            return _mapper.Map<IEnumerable<Entities.Paper>, IEnumerable<Paper>>(query);
         }
     }
 }
