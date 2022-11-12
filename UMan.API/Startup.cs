@@ -51,6 +51,7 @@ namespace UMan.API
                 c.AddProfile<PaperMapperProfile>();
                 c.AddProfile<AuthorMapperProfile>();
                 c.AddProfile<ArticleMapperProfile>();
+                c.AddProfile<HashTagMapperProfile>();
             }, Assembly.GetExecutingAssembly());
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
@@ -65,6 +66,8 @@ namespace UMan.API
             });
 
             services.AddScoped<IRepository<Core.Paper>, PapersRepository>();
+
+            services.AddScoped<IPapersRepository, PapersRepository>();
 
             services.AddScoped<IRepository<Core.Author>, AuthorsRepository>();
 

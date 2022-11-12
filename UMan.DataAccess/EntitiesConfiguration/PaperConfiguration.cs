@@ -12,6 +12,9 @@ namespace UMan.DataAccess.EntitiesConfiguration
 
             builder.HasMany(p => p.Articles)
                  .WithMany(a => a.Papers);
+
+            builder.HasMany(p => p.HashTags)
+                .WithOne(h => h.Paper);
         }
     }
 }

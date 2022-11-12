@@ -43,6 +43,15 @@ namespace UMan.API.Features.Papers
         public async Task<Paper> Get([FromQuery] int id) => await _mediator.Send(new Get.CommandById(id));
 
         /// <summary>
+        /// Gets <see cref="IEnumerable{Paper}"/> by hash tags
+        /// </summary>
+        /// <param name="hashTags">hash tags</param>
+        /// <returns>Papers</returns>
+        [HttpGet("tags/{hashTags}")]
+        public async Task<IEnumerable<Paper>> Get([FromQuery] IEnumerable<HashTag> hashTags)
+            => await _mediator.Send(new Get.CommandByTags(hashTags));
+
+        /// <summary>
         /// Creates new <see cref="Paper"/>
         /// </summary>
         /// <param name="newPaper">New <see cref="Paper"/></param>

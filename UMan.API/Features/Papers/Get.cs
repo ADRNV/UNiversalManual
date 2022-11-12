@@ -40,5 +40,24 @@ namespace UMan.Domain.Papers
                 return await _papersRepository.Get(request.Id, cancellationToken);
             }
         }
+
+        public record CommandByTags(IEnumerable<HashTag> HashTags) : IRequest<IEnumerable<Paper>>;
+
+        public class Handler : IRequestHandler<CommandByTags, IEnumerable<Paper>>
+        {
+            private readonly IPapersRepository _papersRepository;
+
+            public Handler(IPapersRepository papersRepository)
+            {
+                _papersRepository = papersRepository;
+            }
+
+            public async Task<IEnumerable<Paper>> Handle(CommandByTags request, CancellationToken cancellationToken)
+            {
+                return await _papersRepository.GetByTag(request.HashTags);
+            }
+        }
+
+        //TODO Add validation
     }
 }
