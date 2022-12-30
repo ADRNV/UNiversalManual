@@ -1,16 +1,17 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Security.Claims;
 using UMan.Core.Repositories;
 using UMan.DataAccess;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Security;
+using UMan.DataAccess.Security.Common;
 using UMan.Domain;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace UMan.API
 {
@@ -31,18 +32,14 @@ namespace UMan.API
                 o.UseSqlServer(_config.GetConnectionString("ApiUserDbConnection"));
             });
 
-            services.AddDefaultIdentity<IdentityUser>(options => {
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
 
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
 
             }).AddEntityFrameworkStores<ApiUsersContext>();
-
-            services.AddAuthorization(options =>
-                    options.AddPolicy("Admin", policy =>
-                    policy.RequireAuthenticatedUser()
-                    .RequireClaim("IsAdmin", bool.TrueString)));
 
             services.AddControllers();
 
@@ -75,12 +72,51 @@ namespace UMan.API
 
             services.AddAuthentication();
 
-            services.AddAuthorization();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddJwt();
+
+            services.AddAuthorization(c =>
+            {
+                c.AddPolicy("Administrator", builder =>
+                {
+                    builder.RequireClaim(ClaimTypes.Role, "Administrator");
+                });
+
+                c.AddPolicy("Moder", builder =>
+                {
+                    builder.RequireClaim(ClaimTypes.Role, "Moder");
+                });
+
+            });
 
             services.AddMvc();
 
             services.AddSwaggerGen(c =>
             {
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT"
+                });
+
+                c.SupportNonNullableReferenceTypes();
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {   new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                    },
+                    Array.Empty<string>()}
+                });
+
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Papers API", Version = "v1" });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -98,18 +134,43 @@ namespace UMan.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always
+            });
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Papers API");
             });
 
-            
-
             app.UseRouting();
 
             app.UseSwagger();
 
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always
+            });
+
             app.UseAuthentication();
+
+            app.Use(async (context, next) =>
+            {
+                var token = context.Request.Cookies[".AspNetCore.Application.Id"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Request.Headers.Add("Authorization", $"Bearer {token}");
+                }
+
+                await next();
+            });
+
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

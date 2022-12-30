@@ -8,7 +8,7 @@ namespace UMan.DataAccess.Security
     {
         public ApiUsersContext(DbContextOptions<ApiUsersContext> options) : base(options)
         {
-         
+
         }
     }
 }

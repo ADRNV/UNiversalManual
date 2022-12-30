@@ -29,15 +29,15 @@ namespace UMan.API.Features.Authors
         public class HandlerById : IRequestHandler<CommandById, Author>
         {
             private readonly IRepository<Author> _repository;
-            
+
             public HandlerById(IRepository<Author> repository)
             {
-                _repository = repository;   
+                _repository = repository;
             }
 
             public async Task<Author> Handle(CommandById request, CancellationToken cancellationToken)
             {
-                return await _repository.Get(request.Id); 
+                return await _repository.Get(request.Id);
             }
         }
     }

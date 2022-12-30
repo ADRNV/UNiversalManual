@@ -132,7 +132,7 @@ namespace UMan.DataAccess.Repositories
                 .ToList()
                 .UnionBy(hashTags, h => h.Title)
                 .Select(h => h.Paper);
-            
+
             return _mapper.Map<IEnumerable<Entities.Paper>, IEnumerable<Paper>>(query);
         }
     }
