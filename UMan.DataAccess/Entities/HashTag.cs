@@ -6,6 +6,6 @@
 
         public string Title { get; set; } = string.Empty;
 
-        public Paper Paper { get; set; }
+        public List<Paper> Papers { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace UMan.DataAccess.EntitiesConfiguration
                  .WithMany(a => a.Papers);
 
             builder.HasMany(p => p.HashTags)
-                .WithOne(h => h.Paper);
+                .WithMany(h => h.Papers);
         }
     }
 }

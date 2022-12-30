@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using UMan.Core;
 using UMan.Core.Pagination;
 using UMan.Core.Pagination.Paged;
@@ -128,12 +129,13 @@ namespace UMan.DataAccess.Repositories
         private IEnumerable<Paper> FindByHashTags(IEnumerable<Entities.HashTag> hashTags)
         {
             var query = _context.HashTags
-                .Include(h => h.Paper)
+                .AsNoTracking()
+                .Include(h => h.Papers)
                 .ToList()
                 .UnionBy(hashTags, h => h.Title)
-                .Select(h => h.Paper);
+                .Select(h => h.Papers);
 
-            return _mapper.Map<IEnumerable<Entities.Paper>, IEnumerable<Paper>>(query);
+            return _mapper.Map<IEnumerable<Entities.Paper>, IEnumerable<Paper>>((IEnumerable<Entities.Paper>)query);
         }
     }
 }
