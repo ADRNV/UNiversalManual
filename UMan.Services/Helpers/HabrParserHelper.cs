@@ -1,8 +1,6 @@
 ﻿using AngleSharp;
-using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using CodeHollow.FeedReader;
-using System.Net;
 using UMan.Core;
 
 namespace UMan.Services.Helpers
