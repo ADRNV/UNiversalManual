@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using System.Net;
+using UMan.API.ApiModels;
 using UMan.Core;
 using UMan.Core.Repositories;
 
@@ -6,7 +8,7 @@ namespace UMan.Domain.Papers
 {
     public class Delete
     {
-        public record Command(int id) : IRequest<bool>;
+        public record Command(int Id) : IRequest<bool>;
 
         public class Handler : IRequestHandler<Command, bool>
         {
@@ -17,10 +19,8 @@ namespace UMan.Domain.Papers
                 _papersRepository = papersRepository;
             }
 
-            public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
-            {
-                return await _papersRepository.Delete(request.id, cancellationToken);
-            }
+            public async Task<bool> Handle(Command request, CancellationToken cancellationToken) =>
+                await _papersRepository.Delete(request.Id, cancellationToken) ? true : throw new RestException(HttpStatusCode.NotFound);
         }
     }
 }

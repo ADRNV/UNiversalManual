@@ -40,7 +40,7 @@ namespace UMan.DataAccess.Repositories
 
             if (paper == null)
             {
-                throw new EntityNotFoundException<int>(id);
+                return false;
             }
             else
             {

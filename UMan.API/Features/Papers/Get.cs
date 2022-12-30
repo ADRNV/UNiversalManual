@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using System.Net;
+using UMan.API.ApiModels;
 using UMan.Core;
 using UMan.Core.Pagination;
 using UMan.Core.Repositories;
@@ -35,10 +37,8 @@ namespace UMan.Domain.Papers
                 _papersRepository = papersRepository;
             }
 
-            public async Task<Paper> Handle(CommandById request, CancellationToken cancellationToken)
-            {
-                return await _papersRepository.Get(request.Id, cancellationToken);
-            }
+            public async Task<Paper> Handle(CommandById request, CancellationToken cancellationToken) =>
+                await _papersRepository.Get(request.Id) ?? throw new RestException(HttpStatusCode.NotFound);
         }
 
         public record CommandByTags(IEnumerable<HashTag> HashTags) : IRequest<IEnumerable<Paper>>;

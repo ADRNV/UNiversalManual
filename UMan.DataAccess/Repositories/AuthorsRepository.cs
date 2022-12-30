@@ -41,7 +41,7 @@ namespace UMan.DataAccess.Repositories
 
             if (author == null)
             {
-                throw new EntityNotFoundException<int>(id);
+                return false;
             }
             else
             {
@@ -71,7 +71,7 @@ namespace UMan.DataAccess.Repositories
 
             if (author == null)
             {
-                throw new EntityNotFoundException<int>(id);
+                return null;
             }
             else
             {
