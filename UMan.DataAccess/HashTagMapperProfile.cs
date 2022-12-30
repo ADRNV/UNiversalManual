@@ -7,7 +7,7 @@ namespace UMan.DataAccess
         public HashTagMapperProfile()
         {
             CreateMap<Core.HashTag, Entities.HashTag>()
-                .ForMember(h => h.Paper, opt => opt.Ignore());
+                .ForMember(h => h.Papers, opt => opt.Ignore());
         }
     }
 }
