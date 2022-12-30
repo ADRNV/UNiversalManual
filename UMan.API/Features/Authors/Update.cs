@@ -1,6 +1,9 @@
 ﻿using MediatR;
+using UMan.API.ApiModels;
 using UMan.Core;
+using System.Net;
 using UMan.Core.Repositories;
+using UMan.DataAccess.Repositories.Exceptions;
 
 namespace UMan.API.Features.Authors
 {
@@ -19,7 +22,14 @@ namespace UMan.API.Features.Authors
 
             public async Task<int> Handle(Command request, CancellationToken cancellationToken)
             {
-                return await _repository.Update(request.Id, request.Author, cancellationToken);
+                try
+                {
+                   return await _repository.Update(request.Id, request.Author, cancellationToken);
+                }
+                catch(EntityNotFoundException<int>)
+                {
+                    throw new RestException(HttpStatusCode.NotFound);
+                }
             }
         }
     }

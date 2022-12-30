@@ -73,7 +73,7 @@ namespace UMan.API
                 .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss} [{Level}] {SourceContext} {Message}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
 
-            loggerFactory.AddSerilogLogging();
+            loggerFactory.AddSerilog(log);
             Log.Logger = log;
         }
     }

@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using UMan.API.ApiModels;
 using UMan.Core;
 using UMan.Core.Pagination;
 using UMan.Core.Repositories;
+using System.Net;
 
 namespace UMan.API.Features.Authors
 {
@@ -35,10 +37,8 @@ namespace UMan.API.Features.Authors
                 _repository = repository;
             }
 
-            public async Task<Author> Handle(CommandById request, CancellationToken cancellationToken)
-            {
-                return await _repository.Get(request.Id);
-            }
+            public async Task<Author> Handle(CommandById request, CancellationToken cancellationToken) =>
+                await _repository.Get(request.Id) ?? throw new RestException(HttpStatusCode.NotFound);
         }
     }
 }

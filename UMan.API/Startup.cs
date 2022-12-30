@@ -3,9 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Serilog.Sinks.SystemConsole.Themes;
+using Serilog;
 using System.Reflection;
 using System.Security.Claims;
+using UMan.API.Middlewares;
 using UMan.Core.Repositories;
 using UMan.DataAccess;
 using UMan.DataAccess.Repositories;
@@ -124,15 +128,14 @@ namespace UMan.API
 
                 c.IncludeXmlComments(xmlPath);
             });
+
         }
 
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            loggerFactory.AddSerilogLogging();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseCookiePolicy(new CookiePolicyOptions
             {

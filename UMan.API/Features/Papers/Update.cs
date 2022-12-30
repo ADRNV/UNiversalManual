@@ -1,12 +1,15 @@
 ﻿using MediatR;
+using System.Net;
+using UMan.API.ApiModels;
 using UMan.Core;
 using UMan.Core.Repositories;
+using UMan.DataAccess.Repositories.Exceptions;
 
 namespace UMan.Domain.Papers
 {
     public class Update
     {
-        public record Command(Paper Paper, int id) : IRequest<int>;
+        public record Command(Paper Paper, int Id) : IRequest<int>;
 
         public class Handler : IRequestHandler<Command, int>
         {
@@ -19,7 +22,14 @@ namespace UMan.Domain.Papers
 
             public async Task<int> Handle(Command request, CancellationToken cancellationToken)
             {
-                return await _papersRepository.Update(request.id, request.Paper, cancellationToken);
+                try
+                {
+                    return await _papersRepository.Update(request.Id, request.Paper, cancellationToken);
+                }
+                catch (EntityNotFoundException<int>)
+                {
+                    throw new RestException(HttpStatusCode.NotFound);
+                }
             }
         }
     }
