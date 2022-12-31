@@ -77,11 +77,10 @@ namespace UMan.API
             services.AddAuthentication();
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddJwt();
+            var jwtTokenOptions = _config.GetSection("jwtTokenOptions").Get<JwtTokenOptions>();
 
             services.AddAuthorization(c =>
             {
@@ -133,8 +132,6 @@ namespace UMan.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddSerilogLogging();
-
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseCookiePolicy(new CookiePolicyOptions
