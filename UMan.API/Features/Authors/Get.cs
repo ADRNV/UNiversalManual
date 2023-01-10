@@ -1,9 +1,9 @@
 ﻿using MediatR;
+using System.Net;
 using UMan.API.ApiModels;
 using UMan.Core;
 using UMan.Core.Pagination;
 using UMan.Core.Repositories;
-using System.Net;
 
 namespace UMan.API.Features.Authors
 {

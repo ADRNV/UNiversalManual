@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Serilog.Sinks.SystemConsole.Themes;
-using Serilog;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text;
 using UMan.API.Middlewares;
 using UMan.Core.Repositories;
 using UMan.DataAccess;
+using UMan.DataAccess.Entities;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Security;
 using UMan.DataAccess.Security.Common;
@@ -31,19 +32,51 @@ namespace UMan.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApiUsersContext>(o =>
+            services.AddDbContext<ApiUsersContext>(options =>
             {
-                o.UseSqlServer(_config.GetConnectionString("ApiUserDbConnection"));
+                options.UseSqlServer(_config.GetConnectionString("ApiUserDbConnection"));
+            })
+                .AddDefaultIdentity<User>(options =>
+                {
+
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 8;
+
+                }).AddEntityFrameworkStores<ApiUsersContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddDbContext<PapersDbContext>(o =>
+            {
+                o.UseSqlServer(_config.GetConnectionString("DbConnection"));
             });
 
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            var jwtTokenOptions = _config.GetSection("jwtTokenOptions")
+                .Get<JwtTokenOptions>();
+
+            services.AddSingleton(jwtTokenOptions);
+
+            services.AddAuthentication(options =>
             {
-
-                options.SignIn.RequireConfirmedAccount = true;
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 8;
-
-            }).AddEntityFrameworkStores<ApiUsersContext>();
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = true;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtTokenOptions.Issuer,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenOptions.Secret)),
+                        ValidAudience = jwtTokenOptions.Audience,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(1)
+                    };
+                });
 
             services.AddControllers();
 
@@ -61,11 +94,6 @@ namespace UMan.API
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
-            services.AddDbContext<PapersDbContext>(o =>
-            {
-                o.UseSqlServer(_config.GetConnectionString("DbConnection"));
-            });
-
             services.AddScoped<IRepository<Core.Paper>, PapersRepository>();
 
             services.AddScoped<IPapersRepository, PapersRepository>();
@@ -77,10 +105,8 @@ namespace UMan.API
             services.AddAuthentication();
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            var jwtTokenOptions = _config.GetSection("jwtTokenOptions").Get<JwtTokenOptions>();
+            services.AddScoped<IJwtAuthManager, JwtAuthManager>();
 
             services.AddAuthorization(c =>
             {
@@ -100,24 +126,26 @@ namespace UMan.API
 
             services.AddSwaggerGen(c =>
             {
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "Please insert JWT with Bearer into field",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    BearerFormat = "JWT"
-                });
-
                 c.SupportNonNullableReferenceTypes();
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                var securityScheme = new OpenApiSecurityScheme
                 {
-                    {   new OpenApiSecurityScheme
+                    Name = "JWT Authentication",
+                    Description = "Enter JWT Bearer token **_only_**",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Reference = new OpenApiReference
                     {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                    },
-                    Array.Empty<string>()}
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {securityScheme, new string[] { }}
                 });
 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Papers API", Version = "v1" });
@@ -133,6 +161,8 @@ namespace UMan.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseMiddleware<ErrorHandlingMiddleware>();
+
+            app.UseAuthentication();
 
             app.UseCookiePolicy(new CookiePolicyOptions
             {
@@ -156,8 +186,6 @@ namespace UMan.API
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.Always
             });
-
-            app.UseAuthentication();
 
             app.Use(async (context, next) =>
             {

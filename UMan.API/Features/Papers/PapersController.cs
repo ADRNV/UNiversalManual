@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using UMan.Core;
@@ -9,6 +10,7 @@ namespace UMan.API.Features.Papers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PapersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -25,6 +27,7 @@ namespace UMan.API.Features.Papers
         /// <param name="queryParameters">Parameters for pagination</param>
         /// <returns>Page of parameters</returns>
         [HttpGet("page/{queryParameters}")]
+        [AllowAnonymous]
         public async Task<Paper[]> Get([FromQuery] QueryParameters queryParameters)
         {
             var page = await _mediator.Send(new Get.CommandByQueryParameters(queryParameters));
@@ -40,6 +43,7 @@ namespace UMan.API.Features.Papers
         /// <param name="id">id of Paper</param>
         /// <returns>Page of parameters</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<Paper> Get([FromQuery] int id) => await _mediator.Send(new Get.CommandById(id));
 
         /// <summary>
@@ -48,6 +52,7 @@ namespace UMan.API.Features.Papers
         /// <param name="hashTags">hash tags</param>
         /// <returns>Papers</returns>
         [HttpGet("tags/{hashTags}")]
+        [AllowAnonymous]
         public async Task<IEnumerable<Paper>> Get([FromQuery] IEnumerable<HashTag> hashTags)
             => await _mediator.Send(new Get.CommandByTags(hashTags));
 

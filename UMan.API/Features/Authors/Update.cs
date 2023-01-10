@@ -1,7 +1,7 @@
 ﻿using MediatR;
+using System.Net;
 using UMan.API.ApiModels;
 using UMan.Core;
-using System.Net;
 using UMan.Core.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 
@@ -24,9 +24,9 @@ namespace UMan.API.Features.Authors
             {
                 try
                 {
-                   return await _repository.Update(request.Id, request.Author, cancellationToken);
+                    return await _repository.Update(request.Id, request.Author, cancellationToken);
                 }
-                catch(EntityNotFoundException<int>)
+                catch (EntityNotFoundException<int>)
                 {
                     throw new RestException(HttpStatusCode.NotFound);
                 }

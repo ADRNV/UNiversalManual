@@ -1,42 +1,40 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using UMan.DataAccess.Entities;
+using UMan.DataAccess.Security.Common;
 
 namespace UMan.DataAccess.Security
 {
-    public class JwtAuthManager
+    public class JwtAuthManager : IJwtAuthManager
     {
-        public IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary => _usersRefreshTokens.ToImmutableDictionary();
-        private readonly ConcurrentDictionary<string, RefreshToken> _usersRefreshTokens;  // can store in a database or a distributed cache
+        private readonly ConcurrentDictionary<string, RefreshToken> _usersRefreshTokens;
         private readonly JwtTokenOptions _jwtTokenConfig;
         private readonly byte[] _secret;
+        private readonly UserManager<User> _usersStore;
 
-        public JwtAuthManager(JwtTokenOptions jwtTokenConfig)
+        public JwtAuthManager(JwtTokenOptions jwtTokenConfig, UserManager<User> usersStore)
         {
             _jwtTokenConfig = jwtTokenConfig;
             _usersRefreshTokens = new ConcurrentDictionary<string, RefreshToken>();
             _secret = Encoding.ASCII.GetBytes(jwtTokenConfig.Secret);
+            _usersStore = usersStore;
         }
 
-        // optional: clean up expired refresh tokens
         public void RemoveExpiredRefreshTokens(DateTime now)
         {
             var expiredTokens = _usersRefreshTokens.Where(x => x.Value.ExpireAt < now).ToList();
+
             foreach (var expiredToken in expiredTokens)
             {
                 _usersRefreshTokens.TryRemove(expiredToken.Key, out _);
             }
         }
 
-        // can be more specific to ip, user agent, device name, etc.
         public void RemoveRefreshTokenByUserName(string userName)
         {
             var refreshTokens = _usersRefreshTokens.Where(x => x.Value.UserName == userName).ToList();
@@ -46,7 +44,7 @@ namespace UMan.DataAccess.Security
             }
         }
 
-        public JwtAuthResult GenerateTokens(string username, Claim[] claims, DateTime now)
+        public async Task<JwtAuthResult> GenerateTokens(User user, Claim[] claims, DateTime now)
         {
             var shouldAddAudienceClaim = string.IsNullOrWhiteSpace(claims?.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Aud)?.Value);
             var jwtToken = new JwtSecurityToken(
@@ -60,11 +58,13 @@ namespace UMan.DataAccess.Security
 
             var refreshToken = new RefreshToken
             {
-                UserName = username,
+                UserName = user.UserName,
                 TokenString = GenerateRefreshTokenString(),
                 ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration)
             };
             _usersRefreshTokens.AddOrUpdate(refreshToken.TokenString, refreshToken, (_, _) => refreshToken);
+
+            await _usersStore.SetAuthenticationTokenAsync(user, "Default", "AccessToken", jwtToken.ToString());
 
             return new JwtAuthResult
             {
@@ -73,7 +73,7 @@ namespace UMan.DataAccess.Security
             };
         }
 
-        public JwtAuthResult Refresh(string refreshToken, string accessToken, DateTime now)
+        public async Task<JwtAuthResult> Refresh(string refreshToken, string accessToken, DateTime now)
         {
             var (principal, jwtToken) = DecodeJwtToken(accessToken);
 
@@ -82,17 +82,21 @@ namespace UMan.DataAccess.Security
                 throw new SecurityTokenException("Invalid token");
             }
 
-            var userName = principal.Identity?.Name;
+            var user = new User()
+            {
+                UserName = principal.Identity?.Name
+            };
+
             if (!_usersRefreshTokens.TryGetValue(refreshToken, out var existingRefreshToken))
             {
                 throw new SecurityTokenException("Invalid token");
             }
-            if (existingRefreshToken.UserName != userName || existingRefreshToken.ExpireAt < now)
+            if (existingRefreshToken.UserName != user.UserName || existingRefreshToken.ExpireAt < now)
             {
                 throw new SecurityTokenException("Invalid token");
             }
 
-            return GenerateTokens(userName, principal.Claims.ToArray(), now); // need to recover the original claims
+            return await GenerateTokens(user, principal.Claims.ToArray(), now); // need to recover the original claims
         }
 
         public (ClaimsPrincipal, JwtSecurityToken) DecodeJwtToken(string token)

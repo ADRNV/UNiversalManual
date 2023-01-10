@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using UMan.Core;
 using UMan.Core.Pagination;
 using UMan.Core.Pagination.Paged;

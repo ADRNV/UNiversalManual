@@ -1,8 +1,8 @@
 ﻿using MediatR;
+using System.Net;
 using UMan.API.ApiModels;
 using UMan.Core;
 using UMan.Core.Repositories;
-using System.Net;
 
 namespace UMan.API.Features.Authors
 {
@@ -21,7 +21,7 @@ namespace UMan.API.Features.Authors
 
             public async Task<bool> Handle(Command request, CancellationToken cancellationToken) =>
                 await _repository.Delete(request.Id, cancellationToken) ? true : throw new RestException(HttpStatusCode.NotFound);
-            
+
         }
     }
 }
