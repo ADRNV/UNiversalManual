@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Net;
 using UMan.API.ApiModels;
 
 namespace UMan.API.Middlewares
@@ -9,7 +10,7 @@ namespace UMan.API.Middlewares
         private readonly RequestDelegate _next;
 
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
-
+        
         public ErrorHandlingMiddleware(
             RequestDelegate next,
             ILogger<ErrorHandlingMiddleware> logger)
