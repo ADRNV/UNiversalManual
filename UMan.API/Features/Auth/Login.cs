@@ -1,16 +1,19 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 using System.Security.Claims;
+using UMan.API.ApiModels;
 using UMan.DataAccess.Entities;
+using UMan.DataAccess.Security;
 using UMan.DataAccess.Security.Common;
 
 namespace UMan.API.Features.Auth
 {
     public class Login
     {
-        public record Command(User User) : IRequest<string>;
+        public record Command(User User) : IRequest<JwtAuthResult>;
 
-        public class LoginByPassword : IRequestHandler<Command, string>
+        public class LoginByPassword : IRequestHandler<Command, JwtAuthResult>
         {
             private readonly IJwtAuthManager _jwtAuthManager;
 
@@ -27,27 +30,29 @@ namespace UMan.API.Features.Auth
                 _signInManager = signInManager;
             }
 
-            public async Task<string> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<JwtAuthResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                var roles = await _userManager.GetRolesAsync(request.User);
+                var user = await _userManager.FindByNameAsync(request.User.UserName);
+
+                var roles = await _userManager.GetRolesAsync(user);
 
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.Role, roles[0]),
+                    new Claim(ClaimTypes.Role, roles.First()),
                     new Claim(ClaimTypes.Name, request.User.UserName)
                 };
 
-                var canSigin = await _signInManager.CanSignInAsync(request.User);
+                var siginResult = await _signInManager.PasswordSignInAsync(user, request.User.PasswordHash, false, false);
 
-                if (canSigin)
+                if (siginResult.Succeeded)
                 {
                     var token = await _jwtAuthManager.GenerateTokens(request.User, claims, DateTime.Now.AddMinutes(1));
 
-                    return token.AccessToken;
+                    return token;
                 }
                 else
                 {
-                    return null;
+                    throw new RestException(HttpStatusCode.Conflict);
                 }
 
             }

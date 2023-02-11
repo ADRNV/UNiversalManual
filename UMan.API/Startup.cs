@@ -41,11 +41,13 @@ namespace UMan.API
                 .AddDefaultIdentity<User>(options =>
                 {
 
-                    options.SignIn.RequireConfirmedAccount = true;
-                    options.Password.RequireDigit = true;
-                    options.Password.RequiredLength = 8;
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 6;
+                    options.SignIn.RequireConfirmedEmail = false;
 
-                }).AddEntityFrameworkStores<ApiUsersContext>()
+                }).AddRoles<UserRole>()
+                .AddEntityFrameworkStores<ApiUsersContext>()
                 .AddDefaultTokenProviders();
 
             services.AddDbContext<PapersDbContext>(o =>
@@ -106,7 +108,7 @@ namespace UMan.API
 
             services.AddAuthentication();
 
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddScoped<IJwtAuthManager, JwtAuthManager>();
 

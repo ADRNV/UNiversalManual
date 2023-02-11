@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UMan.DataAccess.Entities;
+using UMan.DataAccess.Security;
 
 namespace UMan.API.Features.Auth
 {
@@ -16,7 +17,7 @@ namespace UMan.API.Features.Auth
         }
 
         [HttpPost("login")]
-        public Task<string> Login(string login, string password)
+        public async Task<JwtAuthResult> Login(string login, string password)
         {
             var user = new User()
             {
@@ -24,11 +25,11 @@ namespace UMan.API.Features.Auth
                 PasswordHash = password
             };
 
-            return _mediator.Send(new Login.Command(user));
+            return await _mediator.Send(new Login.Command(user));
         }
 
         [HttpPost("register")]
-        public Task<string> Register(string login, string password)
+        public async Task<JwtAuthResult> Register(string login, string password)
         {
             var user = new User()
             {
@@ -36,7 +37,7 @@ namespace UMan.API.Features.Auth
                 PasswordHash = password
             };
 
-            return _mediator.Send(new Register.Command(user));
+            return await _mediator.Send(new Register.Command(user));
         }
     }
 }
