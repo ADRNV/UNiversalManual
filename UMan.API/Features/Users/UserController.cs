@@ -7,7 +7,7 @@ namespace UMan.API.Features.Users
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController 
+    public class UserController
     {
         private readonly IMediator _mediator;
 
@@ -17,7 +17,7 @@ namespace UMan.API.Features.Users
         }
 
         [HttpPost]
-        public async Task<IdentityResult> Create([FromBody] User user) => 
+        public async Task<IdentityResult> Create([FromBody] User user) =>
             await _mediator.Send(new Create.Command(user));
 
         [HttpDelete]

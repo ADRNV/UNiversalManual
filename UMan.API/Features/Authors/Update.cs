@@ -2,7 +2,6 @@
 using System.Net;
 using UMan.API.ApiModels;
 using UMan.Core;
-using System.Net;
 using UMan.Core.Repositories;
 using UMan.DataAccess.Repositories.Exceptions;
 

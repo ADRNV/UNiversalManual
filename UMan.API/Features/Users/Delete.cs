@@ -10,8 +10,8 @@ namespace UMan.API.Features.Users
 
         public class Handler : IRequestHandler<Commad, IdentityResult>
         {
-            private UserManager<User> _userManager; 
-            
+            private UserManager<User> _userManager;
+
             public Handler(UserManager<User> userManager)
             {
                 _userManager = userManager;

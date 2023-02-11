@@ -19,7 +19,7 @@ namespace UMan.API.Features.Users
 
             public async Task<IdentityResult> Handle(Command request, CancellationToken cancellationToken)
             {
-               return await _userManager.CreateAsync(request.User);    
+                return await _userManager.CreateAsync(request.User);
             }
         }
     }
