@@ -112,6 +112,11 @@ namespace UMan.API
 
             services.AddAuthorization(c =>
             {
+                c.AddPolicy("User", buider =>
+                {
+                    buider.RequireClaim(ClaimTypes.Role, "User");
+                });
+
                 c.AddPolicy("Administrator", builder =>
                 {
                     builder.RequireClaim(ClaimTypes.Role, "Administrator");
