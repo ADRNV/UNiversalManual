@@ -81,5 +81,9 @@ namespace UMan.API.Features.Papers
         /// <returns><see langword="true"/> - if deleted, else - <see langword="false"/></returns>
         [HttpDelete("papers/delete")]
         public async Task<bool> Delete([FromQuery] int id) => await _mediator.Send(new Delete.Command(id));
+
+        [AllowAnonymous]
+        [HttpPost("papers/stopparsing")]
+        public async Task<bool> StartParsing([FromQuery]string action) => await _mediator.Send(new ActionParsing.Command(action));
     }
 }

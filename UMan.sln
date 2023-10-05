@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UMan.DataAccess", "UMan.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UMan.DataAccess.Tests", "UMan.DataAccess.Tests\UMan.DataAccess.Tests.csproj", "{CB17E35D-4CC0-4BAA-9B21-77BE5594B0B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMan.Services", "UMan.Services\UMan.Services.csproj", "{DF4A3735-4AE0-4F76-9AA3-47E5921D5E32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMan.Services", "UMan.Services\UMan.Services.csproj", "{6930A779-BB4B-4F61-BBF1-F516E9FDBE33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +51,10 @@ Global
 		{CB17E35D-4CC0-4BAA-9B21-77BE5594B0B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB17E35D-4CC0-4BAA-9B21-77BE5594B0B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB17E35D-4CC0-4BAA-9B21-77BE5594B0B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF4A3735-4AE0-4F76-9AA3-47E5921D5E32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF4A3735-4AE0-4F76-9AA3-47E5921D5E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF4A3735-4AE0-4F76-9AA3-47E5921D5E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF4A3735-4AE0-4F76-9AA3-47E5921D5E32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6930A779-BB4B-4F61-BBF1-F516E9FDBE33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6930A779-BB4B-4F61-BBF1-F516E9FDBE33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6930A779-BB4B-4F61-BBF1-F516E9FDBE33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6930A779-BB4B-4F61-BBF1-F516E9FDBE33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

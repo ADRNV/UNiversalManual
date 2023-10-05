@@ -27,4 +27,13 @@
     <ProjectReference Include="..\UMan.Core\UMan.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="FeedParser.Core">
+      <HintPath>..\..\..\FeedParser\FeedParser\FeedParser\bin\Debug\net7.0\FeedParser.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FeedParser.Parsers">
+      <HintPath>..\..\..\FeedParser\FeedParser\FeedParser\bin\Debug\net7.0\FeedParser.Parsers.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

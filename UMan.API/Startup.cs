@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FeedParser.Parsers.Updates.Schedulers;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -11,12 +12,14 @@ using System.Security.Claims;
 using System.Text;
 using UMan.API.Middlewares;
 using UMan.Core.Repositories;
+using UMan.Core.Services;
 using UMan.DataAccess;
 using UMan.DataAccess.Entities;
 using UMan.DataAccess.Repositories;
 using UMan.DataAccess.Security;
 using UMan.DataAccess.Security.Common;
 using UMan.Domain;
+using UMan.Services.Parsing;
 
 namespace UMan.API
 {
@@ -109,6 +112,11 @@ namespace UMan.API
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddScoped<IJwtAuthManager, JwtAuthManager>();
+
+            services.AddScoped<IParsingServiceDispatcher<UpdateScheduler>, ParsingServiceDispatcher<UpdateScheduler>>(s =>
+            {
+                return new ParsingServiceDispatcher<UpdateScheduler>(s);
+            });
 
             services.AddAuthorization(c =>
             {

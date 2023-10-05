@@ -1,11 +1,15 @@
 using UMan.API;
+using UMan.API.StartupExtensions;
 
 #pragma warning disable CS1591
 public class Program
 {
     public static void Main(string[] args)
     {
-        CreateHostBuilder(args).Build().Run();
+        CreateHostBuilder(args)
+            .ConfigureParserService()
+            .Build()
+            .Run();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
