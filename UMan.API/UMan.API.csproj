@@ -18,6 +18,10 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FeedParser" Version="1.0.0" />
+    <PackageReference Include="FeedParser.Core" Version="1.0.0" />
+    <PackageReference Include="FeedParser.Data" Version="1.0.0" />
+    <PackageReference Include="FeedParser.Parsers" Version="1.0.0" />
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
     <PackageReference Include="MediatR" Version="11.1.0" />
@@ -39,18 +43,6 @@
     <ProjectReference Include="..\UMan.Core\UMan.Core.csproj" />
     <ProjectReference Include="..\UMan.DataAccess\UMan.DataAccess.csproj" />
     <ProjectReference Include="..\UMan.Services\UMan.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="FeedParser">
-      <HintPath>..\..\..\FeedParser\FeedParser\FeedParser\bin\Debug\net7.0\FeedParser.dll</HintPath>
-    </Reference>
-    <Reference Include="FeedParser.Core">
-      <HintPath>..\..\..\FeedParser\FeedParser\FeedParser\bin\Debug\net7.0\FeedParser.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FeedParser.Parsers">
-      <HintPath>..\..\..\FeedParser\FeedParser\FeedParser\bin\Debug\net7.0\FeedParser.Parsers.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
