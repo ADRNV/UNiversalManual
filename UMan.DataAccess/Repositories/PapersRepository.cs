@@ -28,8 +28,6 @@ namespace UMan.DataAccess.Repositories
 
             await _context.Papers!.AddAsync(paper);
 
-            await _context.SaveChangesAsync();
-
             return paper.Id;
         }
 
@@ -135,6 +133,11 @@ namespace UMan.DataAccess.Repositories
                 .Select(h => h.Papers);
 
             return _mapper.Map<IEnumerable<Entities.Paper>, IEnumerable<Paper>>((IEnumerable<Entities.Paper>)query);
+        }
+
+        public async Task Save()
+        {
+           await _context.SaveChangesAsync();
         }
     }
 }
