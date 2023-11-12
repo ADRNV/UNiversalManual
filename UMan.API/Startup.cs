@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using UMan.API.Middlewares;
+using UMan.API.StartupExtensions;
 using UMan.Core.Repositories;
 using UMan.Core.Services;
 using UMan.DataAccess;
@@ -35,53 +36,14 @@ namespace UMan.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApiUsersContext>(options =>
-            {
-                options.UseSqlServer(_config.GetConnectionString("ApiUserDbConnection"));
-            })
-                .AddDefaultIdentity<User>(options =>
-                {
-
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 6;
-                    options.SignIn.RequireConfirmedEmail = false;
-
-                }).AddRoles<UserRole>()
-                .AddEntityFrameworkStores<ApiUsersContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity(_config);
 
             services.AddDbContext<PapersDbContext>(o =>
             {
                 o.UseSqlServer(_config.GetConnectionString("DbConnection"));
             });
 
-            var jwtTokenOptions = _config.GetSection("jwtTokenOptions")
-                .Get<JwtTokenOptions>();
-
-            services.AddSingleton(jwtTokenOptions);
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = true;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = jwtTokenOptions.Issuer,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenOptions.Secret)),
-                        ValidAudience = jwtTokenOptions.Audience,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(1)
-                    };
-                });
+            services.AddJwtAuthentication(_config);
 
             services.AddControllers();
 
@@ -93,83 +55,15 @@ namespace UMan.API
                 c.AddProfile<HashTagMapperProfile>();
             }, Assembly.GetExecutingAssembly());
 
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatrRequerments();
 
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-
-            services.AddScoped<IRepository<Core.Paper>, PapersRepository>();
-
-            services.AddScoped<IPapersRepository, PapersRepository>();
-
-            services.AddScoped<IRepository<Core.Author>, AuthorsRepository>();
+            services.AddRepositories();
 
             services.AddRouting();
 
-            services.AddAuthentication();
-
-            services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-
-            services.AddScoped<IJwtAuthManager, JwtAuthManager>();
-
-            services.AddScoped<IParsingServiceDispatcher<UpdateScheduler>, ParsingServiceDispatcher<UpdateScheduler>>(s =>
-            {
-                return new ParsingServiceDispatcher<UpdateScheduler>(s);
-            });
-
-            services.AddAuthorization(c =>
-            {
-                c.AddPolicy("User", buider =>
-                {
-                    buider.RequireClaim(ClaimTypes.Role, "User");
-                });
-
-                c.AddPolicy("Administrator", builder =>
-                {
-                    builder.RequireClaim(ClaimTypes.Role, "Administrator");
-                });
-
-                c.AddPolicy("Moder", builder =>
-                {
-                    builder.RequireClaim(ClaimTypes.Role, "Moder");
-                });
-
-            });
-
             services.AddMvc();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SupportNonNullableReferenceTypes();
-
-                var securityScheme = new OpenApiSecurityScheme
-                {
-                    Name = "JWT Authentication",
-                    Description = "Enter JWT Bearer token **_only_**",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
-                    Reference = new OpenApiReference
-                    {
-                        Id = JwtBearerDefaults.AuthenticationScheme,
-                        Type = ReferenceType.SecurityScheme
-                    }
-                };
-                c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {securityScheme, new string[] { }}
-                });
-
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Papers API", Version = "v1" });
-
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-                c.IncludeXmlComments(xmlPath);
-            });
+            services.AddSwaggerDoc();
 
         }
 
